@@ -118,6 +118,18 @@ public class OfferRepository(ProductsDbContext db) : IOfferRepository
         return FromEfToServiceConverter.ToModel(updated);
     }
 
+    public async Task<Dictionary<int, List<string>>> GetAvailableSizesByProductAsync()
+    {
+        var rows = await db.Sizes
+            .Where(s => s.Available && s.Offer.InStock)
+            .Select(s => new { s.Offer.ProductId, s.Size })
+            .Distinct()
+            .ToListAsync();
+
+        return rows.GroupBy(r => r.ProductId)
+            .ToDictionary(g => g.Key, g => g.Select(x => x.Size).ToList());
+    }
+
     public async Task<bool> DeleteAsync(int id)
     {
         var offer = await db.Offers.Include(o => o.Sizes).FirstOrDefaultAsync(o => o.Id == id);

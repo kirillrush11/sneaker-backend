@@ -14,4 +14,5 @@ public interface IOfferRepository
     Task<OfferModel?> CreateAsync(int productId, int storeId, decimal price, string url, bool inStock, List<(string Size, bool Available)> sizes);
     Task<OfferModel?> UpdateAsync(int id, decimal? price, string? url, bool? inStock, List<(string Size, bool Available)>? sizes);
     Task<bool> DeleteAsync(int id);
+    Task<Dictionary<int, List<string>>> GetAvailableSizesByProductAsync();
 }

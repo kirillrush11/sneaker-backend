@@ -31,6 +31,14 @@ public class ProductsDbController(
         });
     }
 
+    [HttpGet("product-sizes")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProductSizes()
+    {
+        var dict = await offerRepo.GetAvailableSizesByProductAsync();
+        return Ok(dict.Select(kv => new { productId = kv.Key, sizes = kv.Value }));
+    }
+
     [HttpGet("offers")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetOffers(
