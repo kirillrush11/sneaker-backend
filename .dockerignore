@@ -1,0 +1,7 @@
+frontend/
+bin/
+obj/
+publish/
+*.md
+*.sln
+.git/

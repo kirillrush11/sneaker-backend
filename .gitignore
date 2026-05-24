@@ -1,0 +1,40 @@
+# Build output
+bin/
+obj/
+publish/
+
+# SQLite database
+*.db
+*.db-shm
+*.db-wal
+
+# User-specific files
+*.user
+*.suo
+.vs/
+
+# IDE
+.idea/
+.vscode/
+*.DS_Store
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Rider
+.idea/
+
+# Claude Code
+.claude/
+
+# Logs
+*.log
+
+# Sensitive config (override with appsettings.Development.json)
+appsettings.Production.json
+appsettings.Staging.json
