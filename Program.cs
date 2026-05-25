@@ -40,6 +40,7 @@ builder.Services.AddScoped<IProductService,  ProductService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 builder.Services.AddScoped<StreetBeatParser>();
 builder.Services.AddScoped<BrandshopParser>();
+builder.Services.AddScoped<SuperstepParser>();
 
 builder.Services.AddCors(options =>
 {
@@ -85,6 +86,19 @@ using (var scope = app.Services.CreateScope())
 
     var productsDb = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
     productsDb.Database.EnsureCreated();
+
+    var stores = new[]
+    {
+        new { Name = "Street Beat", BaseUrl = "https://street-beat.ru",  LogoUrl = "/streetbeat-logo.jpg" },
+        new { Name = "Brandshop",   BaseUrl = "https://brandshop.ru",    LogoUrl = "https://www.google.com/s2/favicons?domain=brandshop.ru&sz=64" },
+        new { Name = "Superstep",   BaseUrl = "https://superstep.ru",    LogoUrl = "https://www.google.com/s2/favicons?domain=superstep.ru&sz=64" },
+    };
+    foreach (var s in stores)
+    {
+        if (!productsDb.Stores.Any(x => x.Name == s.Name))
+            productsDb.Stores.Add(new SneakerAgregator.DataBase.Models.Store { Name = s.Name, BaseUrl = s.BaseUrl, LogoUrl = s.LogoUrl });
+    }
+    productsDb.SaveChanges();
 }
 
 app.UseSwagger();

@@ -5,7 +5,7 @@ namespace SneakerAgregator.Controllers;
 
 [ApiController]
 [Route("api/parser")]
-public class ParserController(StreetBeatParser streetBeatParser, BrandshopParser brandshopParser) : ControllerBase
+public class ParserController(StreetBeatParser streetBeatParser, BrandshopParser brandshopParser, SuperstepParser superstepParser) : ControllerBase
 {
     [HttpPost("streetbeat")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -39,6 +39,22 @@ public class ParserController(StreetBeatParser streetBeatParser, BrandshopParser
         }
     }
 
+    [HttpPost("superstep")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> RunSuperstep()
+    {
+        try
+        {
+            await superstepParser.ParseAsync();
+            return Ok(new { message = "Superstep: парсинг завершён" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message, detail = ex.InnerException?.Message });
+        }
+    }
+
     [HttpPost("all")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -48,6 +64,7 @@ public class ParserController(StreetBeatParser streetBeatParser, BrandshopParser
         {
             await streetBeatParser.ParseAsync();
             await brandshopParser.ParseAsync();
+            await superstepParser.ParseAsync();
             return Ok(new { message = "Все магазины: парсинг завершён" });
         }
         catch (Exception ex)
