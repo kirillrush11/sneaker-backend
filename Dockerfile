@@ -8,7 +8,8 @@ RUN dotnet publish -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
-COPY products.db .
-COPY sneakers.db .
+
+ENV DB_PATH=/data
+VOLUME /data
 
 ENTRYPOINT ["dotnet", "SneakerAgregator.dll"]

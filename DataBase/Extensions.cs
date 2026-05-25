@@ -6,8 +6,11 @@ public static class Extensions
 {
     public static IServiceCollection AddDatabase(this IServiceCollection services)
     {
-        services.AddDbContext<AppDbContext>(opt => opt.UseSqlite("Data Source=sneakers.db"));
-        services.AddDbContext<ProductsDbContext>(opt => opt.UseSqlite("Data Source=products.db"));
+        var dbPath = Environment.GetEnvironmentVariable("DB_PATH") ?? ".";
+        services.AddDbContext<AppDbContext>(opt =>
+            opt.UseSqlite($"Data Source={Path.Combine(dbPath, "sneakers.db")}"));
+        services.AddDbContext<ProductsDbContext>(opt =>
+            opt.UseSqlite($"Data Source={Path.Combine(dbPath, "products.db")}"));
         return services;
     }
 }
