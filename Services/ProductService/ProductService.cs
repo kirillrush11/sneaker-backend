@@ -41,7 +41,7 @@ public class ProductService(IProductRepository productRepo, IOfferRepository off
         return FromServiceToViewModelConverter.ToDetail(product, offers);
     }
 
-    public async Task<List<ProductDetailDto>> SearchAsync(string query)
+    public async Task<List<ProductSummaryDto>> SearchAsync(string query)
     {
         var products = await productRepo.SearchAsync(query);
         if (products.Count == 0) return [];
@@ -51,7 +51,7 @@ public class ProductService(IProductRepository productRepo, IOfferRepository off
         var offerMap   = offers.GroupBy(o => o.ProductId).ToDictionary(g => g.Key, g => g.ToList());
 
         return products.Select(p =>
-            FromServiceToViewModelConverter.ToDetail(p, offerMap.GetValueOrDefault(p.Id, []))
+            FromServiceToViewModelConverter.ToSummary(p, offerMap.GetValueOrDefault(p.Id, []))
         ).ToList();
     }
 
